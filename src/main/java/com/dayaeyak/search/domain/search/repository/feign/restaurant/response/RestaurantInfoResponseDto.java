@@ -21,37 +21,38 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
-@Getter
-public class RestaurantInfoResponseDto {
-    private Long id;
+@Builder
+public record RestaurantInfoResponseDto (
+        Long id,
 
-    private String name;
+        String name,
 
-    private Long sellerId;
+        Long sellerId,
 
-    private String address;
+        String address,
 
-    private String phoneNumber;
+        String phoneNumber,
 
-    @Enumerated(EnumType.STRING)
-    private ClosedDays closedDay;       // 기본 휴무일
+        @Enumerated(EnumType.STRING)
+        ClosedDays closedDay,       // 기본 휴무일
 
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime openTime;        // 영업 시작 시간
+        @JsonFormat(pattern = "HH:mm")
+        LocalTime openTime,        // 영업 시작 시간
 
-    @JsonFormat(pattern = "HH:mm")
-    private LocalTime closeTime;      // 영업 종료 시간
+        @JsonFormat(pattern = "HH:mm")
+        LocalTime closeTime,      // 영업 종료 시간
 
-    @Enumerated(EnumType.STRING)
-    private RestaurantType type;
+        @Enumerated(EnumType.STRING)
+        RestaurantType type,
 
-    private int capacity;              // 총 좌석 수
+        int capacity,              // 총 좌석 수
 
-    @Enumerated(EnumType.STRING)
-    private ActivationStatus isActivation;  // 영업 활성 상태
+        @Enumerated(EnumType.STRING)
+        ActivationStatus isActivation,  // 영업 활성 상태
 
-    private String city;
+        String city,
 
-    @Enumerated(EnumType.STRING)
-    private WaitingStatus waitingActivation;   // 웨이팅 사용 유무
-}
+        @Enumerated(EnumType.STRING)
+        WaitingStatus waitingActivation   // 웨이팅 사용 유무
+) { }
+
