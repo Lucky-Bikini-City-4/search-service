@@ -9,8 +9,7 @@ import com.dayaeyak.search.domain.search.repository.feign.performance.response.P
 import com.dayaeyak.search.domain.search.repository.feign.performance.response.PerformanceFinalResponseDto;
 import com.dayaeyak.search.domain.search.repository.feign.restaurant.response.RestaurantFinalListResponseDto;
 import com.dayaeyak.search.domain.search.repository.feign.restaurant.response.RestaurantFinalResponseDto;
-import com.dayaeyak.search.domain.search.repository.feign.restaurant.response.RestaurantInfoListResponseDto;
-import com.dayaeyak.search.domain.search.repository.feign.restaurant.response.RestaurantInfoResponseDto;
+import com.dayaeyak.search.domain.search.repository.response.AllFinalResponseDto;
 import com.dayaeyak.search.domain.search.service.SimpleQueryService;
 import com.dayaeyak.search.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -76,15 +76,40 @@ public class SimpleQueryController {
             @Validated
             @PathVariable Long restaurantId){
         RestaurantFinalResponseDto responseDto = simpleQueryService.getRestaurant(restaurantId, userId, role);
-        return ApiResponse.success(200, "공연 단건이 조회되었습니다. ", responseDto);
+        return ApiResponse.success(200, "음식점 단건이 조회되었습니다. ", responseDto);
     }
 
     // 음식점 목록 조회
     @GetMapping("/restaurants")
     public ResponseEntity<ApiResponse<RestaurantFinalListResponseDto>> getRestaurants(
             @RequestHeader("X-User-Id") Long userId,
-            @RequestHeader("X-Role") String role){
-        RestaurantFinalListResponseDto responseDto = simpleQueryService.getRestaurants(userId, role);
-        return ApiResponse.success(200, "전시회 목록이 조회되었습니다. ", responseDto);
+            @RequestHeader("X-Role") String role,
+            @RequestParam(required = false) String type
+    ){
+        RestaurantFinalListResponseDto responseDto = simpleQueryService.getRestaurants(userId, role, type);
+        return ApiResponse.success(200, "음식점 목록이 조회되었습니다. ", responseDto);
     }
+
+    // 공연+전시+음식점 통합 목록 조회
+    @GetMapping("/alls")
+    public ResponseEntity<ApiResponse<List<AllFinalResponseDto>>> getAlls(
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestHeader("X-Role") String role,
+            @RequestParam(required = false) String type,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Region region,
+            @RequestParam(required = false) Grade grade,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam String keyword,
+            @RequestParam SearchType searchType
+    ){
+        List<AllFinalResponseDto> responseDto = simpleQueryService.getAlls(userId, role, type, page, size, region, grade, startDate, endDate, keyword, searchType);
+        return ApiResponse.success(200, "전체 목록이 조회되었습니다. ", responseDto);
+
+    }
+
+
+
 }
